@@ -10,6 +10,13 @@ public class Pr2HumanController : MonoBehaviour
     public float xRange;
     public float zRange;
     public GameObject foodProjectile;
+    public GameManager gameManager;
+    public float invincibilityTime;
+
+    private void Start()
+    {
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+    }
 
     // Update is called once per frame
     void Update()
@@ -26,6 +33,13 @@ public class Pr2HumanController : MonoBehaviour
         }
 
         PositionLimiter();
+
+
+
+        if (invincibilityTime > 2)
+        {
+            invincibilityTime = 0;
+        }
     }
 
 
@@ -49,6 +63,25 @@ public class Pr2HumanController : MonoBehaviour
         else if(transform.position.z > zRange)
         {
             transform.position = new Vector3(transform.position.x, transform.position.y, zRange);
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Dog"))
+        {
+            Destroy(other.gameObject);
+
+            if (invincibilityTime == 0)
+            {
+                gameManager.AddLives(-1);
+                invincibilityTime += Time.deltaTime;
+            }
+
+            else
+            {
+                Debug.Log("is Invincible");
+            }
         }
     }
 }

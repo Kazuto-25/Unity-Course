@@ -4,10 +4,17 @@ using UnityEngine;
 
 public class DogEnemyBehaviour : MonoBehaviour
 {
+    public GameManager gameManager;
+
     public float speed;
     public float destroyRange1 = -15;
     public float destroyRange2 = 25;
     public float destroyRange3 = -25;
+
+    private void Start()
+    {
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+    }
 
     void Update()
     {
@@ -21,7 +28,7 @@ public class DogEnemyBehaviour : MonoBehaviour
         if (transform.position.z < destroyRange1 || transform.position.x > destroyRange2 || transform.position.x < destroyRange3)
         {
             Destroy(this.gameObject);
-            Debug.Log("Missed");
+            gameManager.AddLives(-1);
         }
     }
 }
