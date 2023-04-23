@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerControllerc2 : MonoBehaviour
+public class PlayerControllerC2 : MonoBehaviour
 {
     public GameObject dogPrefab;
     public float spawnDelay = 1f;
