@@ -6,9 +6,11 @@ public class PlayerControllerP3 : MonoBehaviour
 {
     public float jumpForce;
     public float gravityModifier;
+    public float doubleJumpForce;
 
     public bool isGrounded = true;
     public bool gameOver = false;
+    public bool doubleJumpUsed = false;
 
     private Rigidbody rb;
     private Animator animator;
@@ -27,6 +29,7 @@ public class PlayerControllerP3 : MonoBehaviour
         animator = GetComponent<Animator>();
         playerSFX = GetComponent<AudioSource>();
         jumpForce = GetComponent<Rigidbody>().mass * 30;
+        doubleJumpForce = GetComponent <Rigidbody>().mass * 20;
 
         Physics.gravity *= gravityModifier;
     }
@@ -56,17 +59,26 @@ public class PlayerControllerP3 : MonoBehaviour
 
     private void Jump()
     {
-        if (isGrounded == true)
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-                isGrounded = false;
-                dirtParticle.Stop();
-                animator.SetTrigger("Jump_trig");
-                playerSFX.PlayOneShot(jumpSound, 2f);
-            }
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            dirtParticle.Stop();
+            isGrounded = false;
+            animator.SetTrigger("Jump_trig");
+            playerSFX.PlayOneShot(jumpSound, 2f);
+
+            doubleJumpUsed = false;
         }
+
+        else if (Input.GetKeyDown(KeyCode.Space) && !isGrounded && !doubleJumpUsed)
+        {
+            doubleJumpUsed = true;
+            rb.AddForce(Vector3.up * doubleJumpForce, ForceMode.Impulse);
+            animator.Play("Running_Jump", 3, 0f);
+            playerSFX.PlayOneShot(jumpSound, 1.0f);
+        }
+
+
     }
 
     public void GameOver()
